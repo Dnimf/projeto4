@@ -14,6 +14,7 @@ from enlace import *
 from crc import Crc16, Calculator
 import time
 import keyboard
+from datetime import datetime
 import numpy as np
 from preparar import extrai_pacote,cria_pacote
 from conversores import decimal_para_bytes_ieee754, bytes_ieee754_para_decimal
@@ -26,7 +27,7 @@ from conversores import decimal_para_bytes_ieee754, bytes_ieee754_para_decimal
 #use uma das 3 opcoes para atribuir à variável a porta usada
 #serialName = "/dev/ttyACM0"           # Ubuntu (variacao de)
 #serialName = "/dev/tty.usbmodem1411" # Mac    (variacao de)
-serialName = "COM5"                  # Windows(variacao de)  detectar sua porta e substituir aqui
+serialName = "COM3"                  # Windows(variacao de)  detectar sua porta e substituir aqui
 
 
 def main():
@@ -132,12 +133,15 @@ def main():
                 elif buffer_len>=10:
                     break
         
-            index,payload,total,numero,correto=extrai_pacote(com1=com1)
-            
+            index,payload,total,numero,correto,crc = extrai_pacote(com1=com1)
+            receb =datetime.now()
+            recebData = f"{receb.day}/{receb.month}/{receb.year}"
+            recebHora = f"{receb.hour}:{receb.minute}:{receb.second}:{receb.microsecond//1000}"
             #print(index)
             #print(numero)
             #print(total)
             #print(correto)
+            print(f"{recebData} {recebHora} receb/{len(payload)+13}/{crc}")
 
             if numero==1 and correto==True:
                 payloads.append(payload)
@@ -148,17 +152,24 @@ def main():
             if numero==total and correto==True:
                 arquivos_completos+=1
                 print (f'Progresso {arquivos_desejeados[index]}: Completo!')
-
+            
             if correto==True:
                 pacote=cria_pacote(index=1,total=index,nPacote=numero,payload=b'00')
                 com1.sendData(pacote)
                 start=time.time()
+                env =datetime.now()
+                envData = f"{env.day}/{env.month}/{env.year}"
+                envHora = f"{env.hour}:{env.minute}:{env.second}:{env.microsecond//1000}"
+                print(f"{envData} {envHora} envio/certo")
                 print (f'Progresso {arquivos_desejeados[index]}: {100*numero/total}%')
                 print("------------------------------------------------------------------------------------------------------------")
             else:
                 pacote=cria_pacote(index=0,total=total,nPacote=numero,payload=b'00')
                 com1.sendData(pacote)
-            
+                env =datetime.now()
+                envData = f"{env.day}/{env.month}/{env.year}"
+                envHora = f"{env.hour}:{env.minute}:{env.second}:{env.microsecond//1000}"
+                print(f"{envData} {envHora} envio/erro")
             if len(arquivos_desejeados)==arquivos_completos:
                 break
         print("------------------------------------------------------------------------------------------------------------")
