@@ -21,8 +21,10 @@ def cria_pacote(index:int,total:int,nPacote:int,payload):
     free = free.to_bytes()
     conf = 42
     conf = conf.to_bytes()
-
-    pacote = index+pkg_len+total+nPacote+free+free+free+free+payload+conf+conf+conf
+    crc = Calculator(Crc16.XMODEM)
+    result = crc.checksum(payload)
+    crcBytes = result.to_bytes(2)
+    pacote = index+pkg_len+total+nPacote+crcBytes+free+free+payload+conf+conf+conf
     
     return pacote
 
@@ -32,14 +34,15 @@ def extrai_pacote(com1:enlace):
      pkg_len,n = com1.getData(1)
      t_pkg,n = com1.getData(2)
      n_pkg,n = com1.getData(2)
-     free = com1.getData(4)
+     crcbyte=com1.getData(2)
+     free = com1.getData(2)
 
      #Converte os valores para int 
      index_arq = int.from_bytes(index_arq)
      pkg_len = int.from_bytes(pkg_len)
      t_pkg = int.from_bytes(t_pkg)
      n_pkg = int.from_bytes(n_pkg)
-
+     crc = int.from_bytes(crcbyte)
      #Extrai o pyload
      payload,n = com1.getData(pkg_len)
 
@@ -54,4 +57,4 @@ def extrai_pacote(com1:enlace):
          i+=1
     
     
-     return index_arq, payload,t_pkg, n_pkg, correto
+     return index_arq, payload,t_pkg, n_pkg, correto, crc

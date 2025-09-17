@@ -144,34 +144,35 @@ def main():
             print("vaicontinuae")
             dicio = {}
             # print(dividir("imgs\\whatsapp.png"))
+            # projeto = "projeto4"
             for nome  in listaString:
                 print(f"nome{nome}")
                 if  nome=="whatsapp":
-                    codigo = dividir("imgs\\whatsapp.png")
+                    codigo = dividir("projeto4\\imgs\\whatsapp.png")
                     dicio['0']=codigo
                 elif nome=="YouTubeMusic":
-                    codigo = dividir("imgs\\YouTubeMusic.png")
+                    codigo = dividir("projeto4\\imgs\\YouTubeMusic.png")
                     dicio['1']=codigo
                 elif nome=="oiii":
-                    codigo = dividir("imgs\\oiii.png")
+                    codigo = dividir("projeto4\\imgs\\oiii.png")
                     dicio['2']=codigo
                 elif nome=="camarao":
-                    codigo = dividir("imgs\\camarao.png")
+                    codigo = dividir("projeto4\\imgs\\camarao.png")
                     dicio['3']=codigo
                 elif nome=="estrela":
-                    codigo = dividir("imgs\\estrela.png")
+                    codigo = dividir("projeto4\\imgs\\estrela.png")
                     dicio['4']=codigo
                 elif nome=="nintendo":
-                    codigo = dividir("imgs\\nintendo.png")
+                    codigo = dividir("projeto4\\imgs\\nintendo.png")
                     dicio['5']=codigo
                 elif nome=="Palmeiras":
-                    codigo = dividir("imgs\\Palmeiras.png")
+                    codigo = dividir("projeto4\\imgs\\Palmeiras.png")
                     dicio['6']=codigo
                 elif nome=="xbox":
-                    codigo = dividir("imgs\\xbox.png")
+                    codigo = dividir("projeto4\\imgs\\xbox.png")
                     dicio['7']=codigo
                 elif nome=="pokebola":
-                    codigo = dividir("imgs\\pokebola.png")
+                    codigo = dividir("projeto4\\imgs\\pokebola.png")
                     dicio['8']=codigo
             # print(dicio.keys())
             max=0
@@ -198,7 +199,9 @@ def main():
                         pass
                     else:
                         print("-------------------------\n")
-                        print(f"index {i}, tamanho {len(n)}")   
+                        print(f"index {i}, tamanho {len(n)}")  
+                        print("-------------------------\n")
+                        
                         pacote=cria_pacote(a,len(n),i+1,n[i])
                         com1.sendData(pacote)
                         time.sleep(.1)
@@ -213,8 +216,6 @@ def main():
                             i =numero-1
                             a=total
                             while True:
-                                crc = Calculator(Crc16.CCITT)
-                                print(crc.checksum(n[i]))
                                 pacote=cria_pacote(a,len(n),i+1,n[i])
                                 com1.sendData(pacote)
                                 time.sleep(.1)
