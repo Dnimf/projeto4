@@ -42,7 +42,7 @@ def extrai_pacote(com1:enlace):
      pkg_len = int.from_bytes(pkg_len)
      t_pkg = int.from_bytes(t_pkg)
      n_pkg = int.from_bytes(n_pkg)
-     crc = int.from_bytes(crcbyte)
+    #  crc = int.from_bytes(crcbyte)
      #Extrai o pyload
      payload,n = com1.getData(pkg_len)
 
@@ -57,4 +57,4 @@ def extrai_pacote(com1:enlace):
          i+=1
     
     
-     return index_arq, payload,t_pkg, n_pkg, correto, crc
+     return index_arq, payload,t_pkg, n_pkg, correto, crcbyte
