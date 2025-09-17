@@ -16,6 +16,7 @@ from crc import Crc16, Calculator
 import numpy as np
 import struct
 from  preparar import dividir, cria_pacote, extrai_pacote
+from datetime import datetime
 serialName = "COM5"                  # Windows(variacao de)  detectar sua porta e substituir aqui
 
 
@@ -186,7 +187,8 @@ def main():
             # pacote=cria_pacote(0,len(dicio["2"]),1,exemplo[0])
             # print(pacote)
             # com1.sendData(pacote)
-            # time.sleep(.1)    
+            # time.sleep(.1) 
+            arquivoTxt = "projeto4\\texto.txt"   
             while True:
                 # print("foi primeiro loop")
                 if i>max:
@@ -203,23 +205,55 @@ def main():
                         print("-------------------------\n")
                         
                         pacote=cria_pacote(a,len(n),i+1,n[i])
+                        crc = Calculator(Crc16.XMODEM)
+                        result = crc.checksum(n[i])
+                        crcBytes = result.to_bytes(2)
                         com1.sendData(pacote)
+                        envio = datetime.now()
+                        envioData = f"{envio.day}/{envio.month}/{envio.year}"
+                        envioHora = f"{envio.hour}: {envio.minute}: {envio.second}: {envio.microsecond // 1000}"
+                        print(envioData, envioHora)
+                        escrita = open(arquivoTxt, "a")
+                        texto = f"{envioData} {envioHora} /envio /3 /{len(n[i])} /{i+1} /{len(n)}/{crcBytes} \n"
+                        escrita.write(texto)
+                        escrita.close()
                         time.sleep(.1)
                         tempoInicial = time.time()
                         tempoFinal = time.time()
                         index=3
                         print(index)
                         com1.rx.clearBuffer()    
+                        print("foi")
                         index, payload, total, numero, correto = extrai_pacote(com1=com1)
+                        confirma = datetime.now()
+                        confirmaData = f"{confirma.day}/{confirma.month}/{confirma.year}"
+                        confirmaHora = f"{confirma.hour}: {confirma.minute}: {confirma.second}: {confirma.microsecond // 1000}"
                         # if (index )
                         if (index == 0) or (numero != (i+1)) or (a!=total):
                             i =numero-1
                             a=total
                             while True:
+                                escrita = open(arquivoTxt, "a")
+                                texto = f"{confirmaData} {confirmaHora} /erro /2 /13 \n"
+                                escrita.write(texto)
+                                escrita.close()
                                 pacote=cria_pacote(a,len(n),i+1,n[i])
+                                crc = Calculator(Crc16.XMODEM)
+                                result = crc.checksum(n[i])
+                                crcBytes = result.to_bytes(2)
                                 com1.sendData(pacote)
+                                envio = datetime.now()
+                                envioData = f"{envio.day}/{envio.month}/{envio.year}"
+                                envioHora = f"{envio.hour}: {envio.minute}: {envio.second}: {envio.microsecond // 1000}"
+                                escrita = open(arquivoTxt, "a")
+                                texto = f"{envioData} {envioHora} /reenvio /3 /{len(n[i])} /{i+1} /{len(n)}/{crcBytes} \n"
+                                escrita.write(texto)
+                                escrita.close()
                                 time.sleep(.1)
-                                index, payload, total, numero, correto = extrai_pacote(com1=com1)            
+                                index, payload, total, numero, correto = extrai_pacote(com1=com1)
+                                confirma = datetime.now()
+                                confirmaData = f"{confirma.day}/{confirma.month}/{confirma.year}"
+                                confirmaHora = f"{confirma.hour}: {confirma.minute}: {confirma.second}: {confirma.microsecond // 1000}"           
                                 if index == 1:
                                     break
                         if index == 2:
@@ -228,6 +262,10 @@ def main():
                             print("pausou")
                             pass
                         if index ==1:
+                            escrita = open(arquivoTxt, "a")
+                            texto = f"{confirmaData} {confirmaHora} /receb /4 /13 \n"
+                            escrita.write(texto)
+                            escrita.close()
                             print(f"index {index}, t0 {tempoInicial} tf {tempoFinal}, arquivo{total}, meu arquivo{a}")
                             a+=1
                             pass
