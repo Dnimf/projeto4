@@ -12,9 +12,10 @@
 
 from enlace import *
 import time
+from crc import Crc16, Calculator
 import numpy as np
 import struct
-from  projeto4.preparar import dividir, cria_pacote, extrai_pacote
+from  preparar import dividir, cria_pacote, extrai_pacote
 serialName = "COM5"                  # Windows(variacao de)  detectar sua porta e substituir aqui
 
 
@@ -212,6 +213,8 @@ def main():
                             i =numero-1
                             a=total
                             while True:
+                                crc = Calculator(Crc16.CCITT)
+                                print(crc.checksum(n[i]))
                                 pacote=cria_pacote(a,len(n),i+1,n[i])
                                 com1.sendData(pacote)
                                 time.sleep(.1)

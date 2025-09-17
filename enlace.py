@@ -11,7 +11,7 @@
 import time
 
 # Interface Física
-from projeto4.interfaceFisica import fisica
+from interfaceFisica import fisica
 
 # enlace Tx e Rx
 from enlaceRx import RX

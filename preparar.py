@@ -1,5 +1,5 @@
 from enlace import *
-
+from crc import Crc16, Calculator
 def dividir(arquivo):
     arquivo1=open(arquivo,"rb").read()
     print(f"---------------------------------\n\n\n\narquvio tem tamanho {len(arquivo1)}\n\n--------------------------")
@@ -17,7 +17,6 @@ def cria_pacote(index:int,total:int,nPacote:int,payload):
     pkg_len = pkg_len.to_bytes()
     total = total.to_bytes(2)
     nPacote = nPacote.to_bytes(2)
-
     free = 0
     free = free.to_bytes()
     conf = 42

@@ -11,11 +11,11 @@
 
 
 from enlace import *
-from crc import Crc16
+from crc import Crc16, Calculator
 import time
 import keyboard
 import numpy as np
-from projeto4.preparar import extrai_pacote,cria_pacote
+from preparar import extrai_pacote,cria_pacote
 from conversores import decimal_para_bytes_ieee754, bytes_ieee754_para_decimal
 
 # voce deverá descomentar e configurar a porta com através da qual ira fazer comunicaçao
