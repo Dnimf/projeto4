@@ -55,6 +55,9 @@ def extrai_pacote(com1:enlace):
          if conf != 42 or n_pkg>t_pkg:
              correto = False
          i+=1
-    
-    
-     return index_arq, payload,t_pkg, n_pkg, correto, crc
+     crcLocal = Calculator(Crc16.XMODEM)
+     crcLocal = crcLocal.checksum(payload)
+     if crcLocal!=crc:
+        correto=False
+        
+     return index_arq, payload,t_pkg, n_pkg, correto
