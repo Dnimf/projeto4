@@ -119,6 +119,8 @@ def main():
         arquivos_completos=0
         start=time.time()
         pacote=cria_pacote(index=1,total=0,nPacote=0,payload=b'00')
+        arquivoTxt = "projeto4\\dataLog.txt"   
+        
         while True:
 
             while True:
@@ -141,8 +143,10 @@ def main():
             #print(numero)
             #print(total)
             #print(correto)
-            print(f"{recebData} {recebHora} receb/{len(payload)+13}/{crc}")
-
+            escrita = open(arquivoTxt, "a")
+            texto=f"{recebData} {recebHora} /receb /3 /{len(payload)+13}/{crc}"
+            escrita.write(texto)
+            escrita.close()
             if numero==1 and correto==True:
                 payloads.append(payload)
 
@@ -160,7 +164,11 @@ def main():
                 env =datetime.now()
                 envData = f"{env.day}/{env.month}/{env.year}"
                 envHora = f"{env.hour}:{env.minute}:{env.second}:{env.microsecond//1000}"
-                print(f"{envData} {envHora} envio/certo")
+                escrita = open(arquivoTxt, "a")
+                
+                texto= f"{envData} {envHora} envio/4"
+                escrita.write(texto)
+                escrita.close()
                 print (f'Progresso {arquivos_desejeados[index]}: {100*numero/total}%')
                 print("------------------------------------------------------------------------------------------------------------")
             else:
@@ -169,7 +177,10 @@ def main():
                 env =datetime.now()
                 envData = f"{env.day}/{env.month}/{env.year}"
                 envHora = f"{env.hour}:{env.minute}:{env.second}:{env.microsecond//1000}"
-                print(f"{envData} {envHora} envio/erro")
+                escrita = open(arquivoTxt, "a")
+                texto=f"{envData} {envHora} envio/2"
+                escrita.write(texto)
+                escrita.close()
             if len(arquivos_desejeados)==arquivos_completos:
                 break
         print("------------------------------------------------------------------------------------------------------------")
